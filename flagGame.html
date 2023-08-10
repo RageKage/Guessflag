@@ -5,11 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="flagImg.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+    />
   </head>
   <body>
     <div class="container">
       <h1 id="flagName">Flag Game</h1>
       <div id="timer" class="timer" style="display: none">Time: 60 seconds</div>
+      <div class="score-container">
+        <p id="score">
+          <span class="heart"><i class="fas fa-heart"></i></span>
+          <span class="heart"><i class="fas fa-heart"></i></span>
+          <span class="heart"><i class="fas fa-heart"></i></span>
+        </p>
+      </div>
+
       <div class="flags">
         <div class="flag1"><img src="" /></div>
         <div class="flag2"><img src="" /></div>
@@ -42,9 +54,10 @@
     }
     return array; // Added return statement
   }
-
+  document.getElementById("score").style.display = "none";
   function startGame() {
     document.getElementById("startButton").style.display = "none";
+    document.getElementById("score").style.display = "block";
 
     score = 0;
     wrongGuesses = 0;
@@ -72,6 +85,7 @@
     wrongGuesses = 0;
     remainingTime = 60;
     updateTimerDisplay(); // Calling the new function to update the timer display
+    resetHeartDisplay();
     clearInterval(timerInterval);
     startTimer();
     startRound();
@@ -89,7 +103,21 @@
       return;
     }
 
+    updateLivesDisplay();
+
     startRound();
+  }
+
+  function updateLivesDisplay() {
+    const hearts = document.querySelectorAll(".heart");
+    for (let i = 0; i < wrongGuesses; i++) {
+      hearts[i].classList.add("inactive");
+    }
+  }
+
+  function resetHeartDisplay() {
+    const hearts = document.querySelectorAll(".heart");
+    hearts.forEach((heart) => heart.classList.remove("inactive"));
   }
 
   function startRound() {
@@ -129,6 +157,40 @@
 </script>
 
 <style>
+  .heart {
+    color: #e74c3c; 
+    font-size: 24px;
+    margin-left: 5px;
+    font-size: 2.5rem;
+    margin-left: 10px;
+    display: inline-block;
+    transform: scale(1);
+    transition: transform 0.3s ease;
+  }
+
+  .heart.inactive {
+    color: #bdc3c7; 
+  }
+
+  .heart:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+  }
+
+  .score-container {
+    padding: 10px 20px;
+    margin: 20px auto;
+  }
+
+  #score {
+    color: #eee;
+    font-size: 20px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    display: none;
+  }
+
   body {
     background-color: #f0f3f4;
     font-family: "Arial", sans-serif;
@@ -136,7 +198,6 @@
   }
 
   .container {
-
     margin: 0 auto;
     padding: 20px;
     background-color: #ffffff;
@@ -159,6 +220,10 @@
   h1 {
     color: #2c3e50;
     text-align: center;
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px #0000001a;
   }
 
   .timer {
@@ -170,8 +235,27 @@
   .flags {
     display: flex;
     justify-content: space-around;
-    flex-wrap: wrap;
   }
+
+  @media screen and (min-width: 700px) {
+    .flags {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+  }
+  @media screen and (max-width: 700px) {
+  .score-container {
+    padding: 5px 10px;
+    margin: 5px auto;
+  }
+
+  .timer {
+    text-align: center;
+    font-size: 15px;
+    color: #e74c3c;
+  }
+}
 
   .flags div {
     width: 30%;
@@ -204,7 +288,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #fff;
+    background-color: #fffffff0;
     z-index: 1000;
     margin: 0 auto;
     display: flex;
